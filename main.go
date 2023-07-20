@@ -63,7 +63,7 @@ func main() {
 
 	http.HandleFunc("/temps", returnTemps)
 
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		panic(err)
 	}
