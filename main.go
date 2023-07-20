@@ -23,7 +23,7 @@ var lineMetadata = map[int]string{
 func returnTemps(w http.ResponseWriter, _ *http.Request) {
 	// Open file that contains info. Assume file over NFS share.
 	fileMutex.Lock()
-	infoContent, err := ioutil.ReadFile("/ha/info.txt")
+	infoBytes, err := ioutil.ReadFile("/ha/info.txt")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Could not open file for reading information: " + err.Error()))
@@ -31,7 +31,9 @@ func returnTemps(w http.ResponseWriter, _ *http.Request) {
 	}
 	fileMutex.Unlock()
 
-	infoLines := strings.Split(string(infoContent), "\n")
+	// Remove last newline
+	infoContent := strings.TrimSuffix(string(infoBytes), "\n")
+	infoLines := strings.Split(infoContent, "\n")
 	info := make(map[string]float64, 0)
 
 	for i, line := range infoLines {
